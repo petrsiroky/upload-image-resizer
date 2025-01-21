@@ -1,0 +1,31 @@
+fields:
+
+    image_width:
+        label: Image Width
+        span: left
+        type: number
+        default: 2000
+        comment: Maximum width in pixels
+
+    image_quality:
+        label: Image Quality
+        span: right
+        type: number
+        default: 90
+        comment: Quality percentage (0-100)
+    
+    use_tinypng:
+        label: Use TinyPNG Optimization
+        span: left
+        type: switch
+        comment: Enable TinyPNG optimization (requires API key)
+        
+    tinypng_api_key:
+        label: TinyPNG API Key
+        span: right
+        type: text
+        comment: Enter your TinyPNG API key
+        trigger:
+            action: show
+            field: use_tinypng
+            condition: checked

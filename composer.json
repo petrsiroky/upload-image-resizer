@@ -1,0 +1,15 @@
+{
+    "name": "stheme/imageresize-plugin",
+    "type": "october-plugin",
+    "description": "Image resize plugin for October CMS",
+    "require": {
+        "composer/installers": "~1.0",
+        "tinify/tinify": "*" 
+    
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
