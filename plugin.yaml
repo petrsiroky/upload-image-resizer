@@ -3,4 +3,4 @@ plugin:
     description: 'Automatically resizes uploaded images to specified dimensions and compression with TinyPNG.'
     author: 'Petr Široký'
     icon: oc-icon-image
-    homepage: ''
+    homepage: 'https://octobercms.com/plugin/stheme-imageresize'
