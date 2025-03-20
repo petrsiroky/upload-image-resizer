@@ -14,35 +14,40 @@ class Plugin extends PluginBase
                 if ($model->isImage() && $model->isPublic()) {
                     $originalPath = $model->getLocalPath();
 
-                    // GD resize for all images
+                    // Získání původních rozměrů
                     list($width, $height) = getimagesize($originalPath);
-                    $newWidth = Settings::get('image_width', 2000);
-                    $ratio = $width / $height;
-                    $newHeight = $newWidth / $ratio;
-                    
-                    $sourceImage = imagecreatefromstring(file_get_contents($originalPath));
-                    $newImage = imagecreatetruecolor($newWidth, $newHeight);
-                    
-                    imagecopyresampled($newImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                    
-                    $imageType = exif_imagetype($originalPath);
-                    switch($imageType) {
-                        case IMAGETYPE_JPEG:
-                            imagejpeg($newImage, $originalPath, Settings::get('image_quality', 90));
-                            break;
-                        case IMAGETYPE_PNG:
-                            $pngQuality = round((Settings::get('image_quality', 90) * 9) / 100);
-                            imagepng($newImage, $originalPath, $pngQuality);
-                            break;
-                        case IMAGETYPE_GIF:
-                            imagegif($newImage, $originalPath);
-                            break;
+                    $targetWidth = Settings::get('image_width', 2000);
+
+                    // Pokud je obrázek menší nebo stejně široký jako cílová šířka, resize se neprovádí
+                    if ($width > $targetWidth) {
+                        $newWidth = $targetWidth;
+                        $ratio = $width / $height;
+                        $newHeight = $newWidth / $ratio;
+
+                        $sourceImage = imagecreatefromstring(file_get_contents($originalPath));
+                        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+                        imagecopyresampled($newImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+                        $imageType = exif_imagetype($originalPath);
+                        switch($imageType) {
+                            case IMAGETYPE_JPEG:
+                                imagejpeg($newImage, $originalPath, Settings::get('image_quality', 90));
+                                break;
+                            case IMAGETYPE_PNG:
+                                $pngQuality = round((Settings::get('image_quality', 90) * 9) / 100);
+                                imagepng($newImage, $originalPath, $pngQuality);
+                                break;
+                            case IMAGETYPE_GIF:
+                                imagegif($newImage, $originalPath);
+                                break;
+                        }
+
+                        imagedestroy($sourceImage);
+                        imagedestroy($newImage);
                     }
                     
-                    imagedestroy($sourceImage);
-                    imagedestroy($newImage);
-
-                    // Additional TinyPNG compression if enabled
+                    // Volitelná komprese pomocí TinyPNG, která se provede vždy, pokud je povolena
                     if (Settings::get('use_tinypng') && Settings::get('tinypng_api_key')) {
                         Tinify::setKey(Settings::get('tinypng_api_key'));
                         $source = \Tinify\fromFile($originalPath);
