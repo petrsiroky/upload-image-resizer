@@ -61,6 +61,16 @@ class Plugin extends PluginBase
         });
     }
 
+    public function registerPermissions()
+    {
+        return [
+            'stheme.imageresize.access_settings' => [
+                'label' => 'Access Image Resizer Settings',
+                'tab' => 'Image Resizer',
+            ],
+        ];
+    }
+
     public function registerSettings()
     {
         return [
