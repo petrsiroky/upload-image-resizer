@@ -71,7 +71,8 @@ class Plugin extends PluginBase
                 'icon' => 'icon-image',
                 'class' => 'Stheme\ImageResize\Models\Settings',
                 'order' => 500,
-                'keywords' => 'image resize tinypng webp'
+                'keywords' => 'image resize tinypng webp',
+                'permissions' => ['stheme.imageresize.access_settings']
             ]
         ];
     }
